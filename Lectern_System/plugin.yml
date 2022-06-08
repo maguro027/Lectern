@@ -1,0 +1,4 @@
+name: Lectern_System
+version: 1.0
+api-version: 1.13
+main: lectern_system.plugin.main.Core
