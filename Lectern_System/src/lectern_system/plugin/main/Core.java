@@ -11,6 +11,7 @@ public class Core extends JavaPlugin {
 		new Event(this);
 		System.out.println("lectern_system Start");
 	}
+	
 
 	@Override
 	public void onDisable() {

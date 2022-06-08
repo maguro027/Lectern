@@ -51,6 +51,7 @@ public class Event implements Listener {
 		if (e.getPlayer().isSneaking()) return;
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
+
 		Block block = e.getClickedBlock();
 		Material material = block.getType();
 
@@ -63,7 +64,7 @@ public class Event implements Listener {
 				if (face != ((Directional) relative.getBlockData()).getFacing()) continue;
 
 				Sign signboard = (Sign) relative.getState();
-				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("Åò1Åòl[Lectern]")) {
+				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("ÔøΩÔøΩ1ÔøΩÔøΩl[Lectern]")) {
 					e.setCancelled(true);
 					e.getPlayer().closeInventory();
 
@@ -80,7 +81,6 @@ public class Event implements Listener {
 							if (item.getType() == Material.WRITTEN_BOOK) {
 								e.getPlayer().openBook(item);
 								return;
-
 							}
 						}
 					}
@@ -97,7 +97,7 @@ public class Event implements Listener {
 				if (face != ((Directional) relative.getBlockData()).getFacing()) continue;
 
 				Sign signboard = (Sign) relative.getState();
-				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("Åò1Åòl[Lectern]")) {
+				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("ÔøΩÔøΩ1ÔøΩÔøΩl[Lectern]")) {
 					e.setCancelled(true);
 
 					e.getPlayer().closeInventory();
@@ -118,7 +118,7 @@ public class Event implements Listener {
 
 		Sign signboard = (Sign) e.getClickedBlock().getState();
 
-		if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("Åò1Åòl[Lectern]")) {
+		if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("ÔøΩÔøΩ1ÔøΩÔøΩl[Lectern]")) {
 
 			Location loc = e.getClickedBlock().getLocation();
 
@@ -138,9 +138,9 @@ public class Event implements Listener {
 			}
 
 			if (loc.getBlock().getType() == Material.AIR) return;
-			
+
 			e.getPlayer().closeInventory();
-			
+
 			List<Entity> nearbyEntites = (List<Entity>) loc.getWorld().getNearbyEntities(loc, 2, 2, 2);
 			for (Entity value : nearbyEntites) {
 				if (value.getType().toString().endsWith("ITEM_FRAME")) {
@@ -152,7 +152,7 @@ public class Event implements Listener {
 					}
 				}
 			}
-			
+
 			loc.setY(loc.getY() - 1);
 			lectern_system.plugin.main.Main.getinventory(loc, e.getPlayer());
 		}

@@ -14,6 +14,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class Main {
+	
 	public static void getinventory(Location loc, Player player) {
 		int conut = -1, invsize = 27;
 
