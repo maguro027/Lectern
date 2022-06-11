@@ -1,15 +1,13 @@
 package lectern_system.plugin.event;
 
 import java.util.HashSet;
-import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +20,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class Event implements Listener {
 
@@ -51,7 +48,6 @@ public class Event implements Listener {
 		if (e.getPlayer().isSneaking()) return;
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-
 		Block block = e.getClickedBlock();
 		Material material = block.getType();
 
@@ -64,26 +60,12 @@ public class Event implements Listener {
 				if (face != ((Directional) relative.getBlockData()).getFacing()) continue;
 
 				Sign signboard = (Sign) relative.getState();
-				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("��1��l[Lectern]")) {
+				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("§1§l[Lectern]")) {
 					e.setCancelled(true);
 					e.getPlayer().closeInventory();
 
-					List<Entity> nearbyEntites = (List<Entity>) block.getLocation().getWorld()
-							.getNearbyEntities(block.getLocation(), 2, 2, 2);
+					lectern_system.plugin.main.Main.onlecclick(e.getPlayer(), e.getClickedBlock().getLocation());
 
-					for (Entity value : nearbyEntites) {
-
-						if (value.getType().toString().endsWith("ITEM_FRAME")) {
-
-							final ItemFrame frame = (ItemFrame) value;
-							final ItemStack item = frame.getItem();
-
-							if (item.getType() == Material.WRITTEN_BOOK) {
-								e.getPlayer().openBook(item);
-								return;
-							}
-						}
-					}
 				}
 			}
 
@@ -97,13 +79,10 @@ public class Event implements Listener {
 				if (face != ((Directional) relative.getBlockData()).getFacing()) continue;
 
 				Sign signboard = (Sign) relative.getState();
-				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("��1��l[Lectern]")) {
+				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("§1§l[Lectern]")) {
 					e.setCancelled(true);
-
 					e.getPlayer().closeInventory();
-					Location loc = e.getClickedBlock().getLocation();
-					loc.setY(loc.getY() - 1);
-					lectern_system.plugin.main.Main.getinventory(loc, e.getPlayer());
+					lectern_system.plugin.main.Main.onlecclick(e.getPlayer(), e.getClickedBlock().getLocation());
 					break;
 				}
 			}
@@ -118,7 +97,7 @@ public class Event implements Listener {
 
 		Sign signboard = (Sign) e.getClickedBlock().getState();
 
-		if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("��1��l[Lectern]")) {
+		if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("§1§l[Lectern]")) {
 
 			Location loc = e.getClickedBlock().getLocation();
 
@@ -136,25 +115,11 @@ public class Event implements Listener {
 				loc.setX(loc.getX() + 1);
 				break;
 			}
-
-			if (loc.getBlock().getType() == Material.AIR) return;
-
+			if (!(loc.getBlock().getType() == Material.ENCHANTING_TABLE)) return;
 			e.getPlayer().closeInventory();
 
-			List<Entity> nearbyEntites = (List<Entity>) loc.getWorld().getNearbyEntities(loc, 2, 2, 2);
-			for (Entity value : nearbyEntites) {
-				if (value.getType().toString().endsWith("ITEM_FRAME")) {
-					final ItemFrame frame = (ItemFrame) value;
-					final ItemStack item = frame.getItem();
-					if (item.getType() == Material.WRITTEN_BOOK) {
-						e.getPlayer().openBook(item);
-						return;
-					}
-				}
-			}
+			lectern_system.plugin.main.Main.onlecclick(e.getPlayer(), loc);
 
-			loc.setY(loc.getY() - 1);
-			lectern_system.plugin.main.Main.getinventory(loc, e.getPlayer());
 		}
 	}
 

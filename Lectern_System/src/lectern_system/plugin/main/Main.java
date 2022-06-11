@@ -1,19 +1,46 @@
 package lectern_system.plugin.main;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Barrel;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class Main {
+	
+	public static void onlecclick(Player player,Location loc) {
+		
+		List<Entity> nearbyEntites = (List<Entity>) loc.getWorld().getNearbyEntities(loc, 2, 2, 2);
+		for (Entity value : nearbyEntites) {
+			if (value.getType().toString().endsWith("ITEM_FRAME")) {
+				final ItemFrame frame = (ItemFrame) value;
+				final ItemStack item = frame.getItem();
+				if (item.getType() == Material.WRITTEN_BOOK) {
+					player.openBook(item);
+					return;
+				}
+			}
+		}
+		
+		for (BlockFace face : BlockFace.values()) {
+			//ŽüˆÍ‚ðŽæ“¾
+		}
+		
+		loc.setY(loc.getY() - 1);
+		getinventory(loc, player);
+		
+	}
 	
 	public static void getinventory(Location loc, Player player) {
 		int conut = -1, invsize = 27;
