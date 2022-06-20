@@ -18,10 +18,10 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class Main {
-	
-	public static void onlecclick(Player player,Location loc) {
-		
+
+	public static void onlecclick(Player player, Location loc) {
 		List<Entity> nearbyEntites = (List<Entity>) loc.getWorld().getNearbyEntities(loc, 2, 2, 2);
+		// Item Frame
 		for (Entity value : nearbyEntites) {
 			if (value.getType().toString().endsWith("ITEM_FRAME")) {
 				final ItemFrame frame = (ItemFrame) value;
@@ -32,16 +32,19 @@ public class Main {
 				}
 			}
 		}
-		
+
+		//
 		for (BlockFace face : BlockFace.values()) {
-			//ŽüˆÍ‚ðŽæ“¾
+			if (!(loc.getBlock().getRelative(face).getType() == Material.AIR)) {
+				getinventory(loc.getBlock().getRelative(face).getLocation(), player);
+			}
+
 		}
-		
+
 		loc.setY(loc.getY() - 1);
 		getinventory(loc, player);
-		
 	}
-	
+
 	public static void getinventory(Location loc, Player player) {
 		int conut = -1, invsize = 27;
 
@@ -49,7 +52,6 @@ public class Main {
 		Inventory cash = null, inv = null;
 		Barrel barrel = null;
 		Chest chest = null;
-		ItemStack item = null;
 
 		inv = Bukkit.createInventory(null, invsize, "Lectern");
 
@@ -76,11 +78,11 @@ public class Main {
 			HashMap<Integer, ItemStack> items = new HashMap<>();
 			for (int i = 0, size = invsize; i < size; ++i) {
 
-				item = cash.getItem(i);
-				if (item == null) continue;
-				if (!(item.getType() == Material.WRITTEN_BOOK)) continue;
+
+				if (cash.getItem(i) == null) continue;
+				if (!(cash.getItem(i).getType() == Material.WRITTEN_BOOK)) continue;
 				conut++;
-				items.put(conut, item);
+				items.put(conut, cash.getItem(i));
 
 			}
 			if (conut >= 27) {

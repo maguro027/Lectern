@@ -33,49 +33,25 @@ public class Event implements Listener {
 	@EventHandler
 	public void SignChangeEvent(SignChangeEvent e) {
 		if (e.getLine(0).equals("[Lectern]") || e.getLine(0).equals("[lectern]") || e.getLine(0).equals("[lec]")
-				|| e.getLine(0).equals("[Lec]")) {
+				|| e.getLine(0).equals("[Lec]"))
 			e.setLine(0, "[Lectern]");
-		}
+
 	}
 
-	private static boolean isNotBookStorageType(Material type) {
+	public static boolean isNotBookStorageType(Material type) {
 		return !BOOK_STORAGE_TYPES.contains(type);
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onEnSignClick(PlayerInteractEvent e) {
-
 		if (e.getPlayer().isSneaking()) return;
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-		Block block = e.getClickedBlock();
-		Material material = block.getType();
-
-		if (material == Material.ENCHANTING_TABLE) {
+		if (e.getClickedBlock().getType() == Material.ENCHANTING_TABLE) {
 
 			for (BlockFace face : BlockFace.values()) {
-				Block relative = block.getRelative(face);
+				Block relative = e.getClickedBlock().getRelative(face);
 				if (!relative.getType().toString().endsWith("_WALL_SIGN")) continue;
-
-				if (face != ((Directional) relative.getBlockData()).getFacing()) continue;
-
-				Sign signboard = (Sign) relative.getState();
-				if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("§1§l[Lectern]")) {
-					e.setCancelled(true);
-					e.getPlayer().closeInventory();
-
-					lectern_system.plugin.main.Main.onlecclick(e.getPlayer(), e.getClickedBlock().getLocation());
-
-				}
-			}
-
-			Block down = block.getRelative(BlockFace.DOWN);
-			if (isNotBookStorageType(down.getType())) return;
-
-			for (BlockFace face : BlockFace.values()) {
-				Block relative = block.getRelative(face);
-				if (!relative.getType().toString().endsWith("_WALL_SIGN")) continue;
-
 				if (face != ((Directional) relative.getBlockData()).getFacing()) continue;
 
 				Sign signboard = (Sign) relative.getState();
@@ -85,12 +61,25 @@ public class Event implements Listener {
 					lectern_system.plugin.main.Main.onlecclick(e.getPlayer(), e.getClickedBlock().getLocation());
 					break;
 				}
+
+				if (isNotBookStorageType(e.getClickedBlock().getRelative(BlockFace.DOWN).getType())) return;
+
+				for (BlockFace face1 : BlockFace.values()) {
+					Block relative1 = e.getClickedBlock().getRelative(face1);
+					if (!relative1.getType().toString().endsWith("_WALL_SIGN")) continue;
+					if (face1 != ((Directional) relative1.getBlockData()).getFacing()) continue;
+
+					Sign signboard1 = (Sign) relative1.getState();
+					if (signboard1.getLine(0).equals("[Lectern]") || signboard1.getLine(0).equals("§1§l[Lectern]")) {
+						e.setCancelled(true);
+						e.getPlayer().closeInventory();
+						lectern_system.plugin.main.Main.onlecclick(e.getPlayer(), e.getClickedBlock().getLocation());
+						break;
+					}
+				}
 			}
 		}
-	}
 
-	@EventHandler(ignoreCancelled = true)
-	public void onSignClick(PlayerInteractEvent e) {
 		if (!(e.getClickedBlock().getState() instanceof Sign)) return;
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 		if (!e.hasBlock()) return;
@@ -98,7 +87,6 @@ public class Event implements Listener {
 		Sign signboard = (Sign) e.getClickedBlock().getState();
 
 		if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("§1§l[Lectern]")) {
-
 			Location loc = e.getClickedBlock().getLocation();
 
 			switch (e.getBlockFace().toString()) {
