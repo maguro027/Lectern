@@ -32,9 +32,7 @@ public class Main {
 				}
 			}
 		}
-
-		//
-		for (BlockFace face : BlockFace.values()) {
+		for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, }) {
 			if (!(loc.getBlock().getRelative(face).getType() == Material.AIR)) {
 				getinventory(loc.getBlock().getRelative(face).getLocation(), player);
 			}
@@ -47,16 +45,14 @@ public class Main {
 
 	public static void getinventory(Location loc, Player player) {
 		int conut = -1, invsize = 27;
-
-		Material btype = loc.getBlock().getType();
 		Inventory cash = null, inv = null;
 		Barrel barrel = null;
 		Chest chest = null;
 
 		inv = Bukkit.createInventory(null, invsize, "Lectern");
 
-		if (btype == Material.CHEST || btype == Material.TRAPPED_CHEST || btype == Material.BARREL) {
-			if (!(btype == Material.BARREL)) {
+		if (loc.getBlock().getType() == Material.CHEST || loc.getBlock().getType() == Material.TRAPPED_CHEST || loc.getBlock().getType() == Material.BARREL) {
+			if (!(loc.getBlock().getType() == Material.BARREL)) {
 
 				chest = ((Chest) loc.getBlock().getState());
 				if (chest.getInventory().getHolder() instanceof DoubleChest) {
@@ -77,7 +73,6 @@ public class Main {
 			}
 			HashMap<Integer, ItemStack> items = new HashMap<>();
 			for (int i = 0, size = invsize; i < size; ++i) {
-
 
 				if (cash.getItem(i) == null) continue;
 				if (!(cash.getItem(i).getType() == Material.WRITTEN_BOOK)) continue;
