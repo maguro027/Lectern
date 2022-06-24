@@ -23,8 +23,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Event implements Listener {
 
-	private static final HashSet<Material> BOOK_STORAGE_TYPES = Sets.newHashSet(Material.CHEST, Material.TRAPPED_CHEST,
-			Material.BARREL);
+	private static final HashSet<Material> BOOK_STORAGE_TYPES = Sets.newHashSet(Material.CHEST, Material.TRAPPED_CHEST, Material.BARREL);
 
 	public Event(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -32,9 +31,7 @@ public class Event implements Listener {
 
 	@EventHandler
 	public void SignChangeEvent(SignChangeEvent e) {
-		if (e.getLine(0).equals("[Lectern]") || e.getLine(0).equals("[lectern]") || e.getLine(0).equals("[lec]")
-				|| e.getLine(0).equals("[Lec]"))
-			e.setLine(0, "[Lectern]");
+		if (e.getLine(0).equals("[Lectern]") || e.getLine(0).equals("[lectern]") || e.getLine(0).equals("[lec]") || e.getLine(0).equals("[Lec]")) e.setLine(0, "[Lectern]");
 
 	}
 
@@ -84,9 +81,7 @@ public class Event implements Listener {
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 		if (!e.hasBlock()) return;
 
-		Sign signboard = (Sign) e.getClickedBlock().getState();
-
-		if (signboard.getLine(0).equals("[Lectern]") || signboard.getLine(0).equals("§1§l[Lectern]")) {
+		if (((Sign) e.getClickedBlock().getState()).getLine(0).equals("[Lectern]") || ((Sign) e.getClickedBlock().getState()).getLine(0).equals("§1§l[Lectern]")) {
 			Location loc = e.getClickedBlock().getLocation();
 
 			switch (e.getBlockFace().toString()) {
@@ -115,12 +110,10 @@ public class Event implements Listener {
 	public void onInventoryClickEvent(InventoryClickEvent e) {
 		int size = 26;
 		Player player = (Player) e.getWhoClicked();
-		if (player.getOpenInventory().getTitle().equals("Lectern")
-				|| player.getOpenInventory().getTitle().equals("Lectern 54")) {
+		if (player.getOpenInventory().getTitle().equals("Lectern") || player.getOpenInventory().getTitle().equals("Lectern 54")) {
 			e.setCancelled(true);
 			if (player.getOpenInventory().getTitle().equals("Lectern 54")) size = 54;
-			if (e.getRawSlot() > size || e.getRawSlot() == -999 || e.getInventory().getItem(e.getRawSlot()) == null)
-				return;
+			if (e.getRawSlot() > size || e.getRawSlot() == -999 || e.getInventory().getItem(e.getRawSlot()) == null) return;
 			player.openBook(e.getInventory().getItem(e.getRawSlot()));
 
 		}
