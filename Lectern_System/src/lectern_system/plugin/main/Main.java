@@ -14,7 +14,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class Main {
@@ -24,19 +23,11 @@ public class Main {
 		// Item Frame
 		for (Entity value : nearbyEntites) {
 			if (value.getType().toString().endsWith("ITEM_FRAME")) {
-				final ItemFrame frame = (ItemFrame) value;
-				final ItemStack item = frame.getItem();
-				if (item.getType() == Material.WRITTEN_BOOK) {
-					player.openBook(item);
-					return;
-				}
+				if (((ItemFrame) value).getItem().getType() == Material.WRITTEN_BOOK) player.openBook(((ItemFrame) value).getItem());
 			}
 		}
 		for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, }) {
-			if (!(loc.getBlock().getRelative(face).getType() == Material.AIR)) {
-				getinventory(loc.getBlock().getRelative(face).getLocation(), player);
-			}
-
+			if (!(loc.getBlock().getRelative(face).getType() == Material.AIR)) getinventory(loc.getBlock().getRelative(face).getLocation(), player);
 		}
 
 		loc.setY(loc.getY() - 1);
@@ -44,35 +35,25 @@ public class Main {
 	}
 
 	public static void getinventory(Location loc, Player player) {
-		int conut = -1, invsize = 27;
-		Inventory cash = null, inv = null;
-		Barrel barrel = null;
-		Chest chest = null;
-
-		inv = Bukkit.createInventory(null, invsize, "Lectern");
-
 		if (loc.getBlock().getType() == Material.CHEST || loc.getBlock().getType() == Material.TRAPPED_CHEST || loc.getBlock().getType() == Material.BARREL) {
+			int conut = -1;
+			Inventory cash = null, inv = Bukkit.createInventory(null, 27, "Lectern");
+			;
 			if (!(loc.getBlock().getType() == Material.BARREL)) {
 
-				chest = ((Chest) loc.getBlock().getState());
-				if (chest.getInventory().getHolder() instanceof DoubleChest) {
-					chest = (Chest) loc.getBlock().getState();
-					InventoryHolder holder = chest.getInventory().getHolder();
-					DoubleChest doubleChest = ((DoubleChest) holder);
-
-					cash = doubleChest.getInventory();
-					invsize = 54;
-
+				if (((Chest) loc.getBlock().getState()).getInventory().getHolder() instanceof DoubleChest) {
+					cash = ((DoubleChest) ((Chest) loc.getBlock().getState()).getInventory().getHolder()).getInventory();
+					;
 				} else {
-					chest = (Chest) loc.getBlock().getState();
-					cash = chest.getBlockInventory();
+					cash = ((Chest) loc.getBlock().getState()).getBlockInventory();
 				}
+
 			} else {
-				barrel = (Barrel) loc.getBlock().getState();
-				cash = barrel.getInventory();
+				cash = ((Barrel) loc.getBlock().getState()).getInventory();
 			}
+
 			HashMap<Integer, ItemStack> items = new HashMap<>();
-			for (int i = 0, size = invsize; i < size; ++i) {
+			for (int i = 0, size = cash.getSize(); i < size; ++i) {
 
 				if (cash.getItem(i) == null) continue;
 				if (!(cash.getItem(i).getType() == Material.WRITTEN_BOOK)) continue;
@@ -80,9 +61,8 @@ public class Main {
 				items.put(conut, cash.getItem(i));
 
 			}
-			if (conut >= 27) {
-				inv = Bukkit.createInventory(null, 54, "Lectern 54");
-			}
+			if (conut >= 27) inv = Bukkit.createInventory(null, 54, "Lectern 54");
+
 			for (java.util.Map.Entry<Integer, ItemStack> item1 : items.entrySet()) {
 				inv.setItem(item1.getKey(), item1.getValue());
 			}
@@ -92,7 +72,6 @@ public class Main {
 			} else if (conut == -1) {
 				return;
 			} else {
-
 				player.openInventory(inv);
 			}
 		}
